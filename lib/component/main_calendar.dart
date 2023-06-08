@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:scheduler/const/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class MainCalender extends StatelessWidget {
+class MainCalendar extends StatelessWidget {
   final OnDaySelected onDaySelected;
   final DateTime selectedDate;
 
-  const MainCalender(
+  const MainCalendar(
       {required this.onDaySelected, required this.selectedDate, Key? key})
       : super(key: key);
 
