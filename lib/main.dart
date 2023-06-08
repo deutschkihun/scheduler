@@ -4,19 +4,18 @@ import 'package:scheduler/repository/schedule_repository.dart';
 import 'package:scheduler/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:scheduler/database/drift_database.dart';
-import 'package:get_it/get_it.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:scheduler/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await initializeDateFormatting();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  final database = LocalDatabase(); // ➊ 데이터베이스 생성
+  await initializeDateFormatting();
 
   final repository = ScheduleRepository();
   final scheduleProvider = ScheduleProvider(repository: repository);
-  GetIt.I.registerSingleton<LocalDatabase>(database);
 
   runApp(ChangeNotifierProvider(
     create: (_) => scheduleProvider,

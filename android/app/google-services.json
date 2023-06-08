@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "522343552464",
+    "project_id": "calendar-scheduler-a58e9",
+    "storage_bucket": "calendar-scheduler-a58e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522343552464:android:14b1ee4fb94756a55e55d5",
+        "android_client_info": {
+          "package_name": "com.example.scheduler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522343552464-vuc57tlqu74mq1mgu43j4erm1vce3k4e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqTxHCr2stcrQF8QI7oNPOSy7LBzXQ1mY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522343552464-vuc57tlqu74mq1mgu43j4erm1vce3k4e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
