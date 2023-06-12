@@ -1,14 +1,13 @@
+import 'package:scheduler/model/schedule_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scheduler/component/main_calendar.dart';
 import 'package:scheduler/component/schedule_card.dart';
 import 'package:scheduler/component/today_banner.dart';
 import 'package:scheduler/component/schedule_bottom_sheet.dart';
 import 'package:scheduler/const/colors.dart';
-import 'package:scheduler/model/schedule_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -23,6 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String formattedMonth = selectedDate.month.toString().padLeft(2, '0');
+    String formattedDay = selectedDate.day.toString().padLeft(2, '0');
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         // ➊ 새 일정 버튼
@@ -38,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
-        child: const Icon(
+        child: Icon(
           Icons.add,
         ),
       ),
@@ -49,16 +51,34 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             MainCalendar(
               selectedDate: selectedDate, // 선택된 날짜 전달하기
+
               // 날짜가 선택됐을 때 실행할 함수
               onDaySelected: (selectedDate, focusedDate) =>
                   onDaySelected(selectedDate, focusedDate, context),
             ),
-            const SizedBox(height: 8.0),
-            TodayBanner(
-              selectedDate: selectedDate,
-              count: 0,
+            SizedBox(height: 8.0),
+            StreamBuilder<QuerySnapshot>(
+              // ListView에 적용했던 같은 쿼리
+              stream: FirebaseFirestore.instance
+                  .collection(
+                    'schedule',
+                  )
+                  .where(
+                    'date',
+                    isEqualTo:
+                        '${selectedDate.year}$formattedMonth$formattedDay',
+                  )
+                  .snapshots(),
+              builder: (context, snapshot) {
+                return TodayBanner(
+                  selectedDate: selectedDate,
+
+                  // ➊ 개수 가져오기
+                  count: snapshot.data?.docs.length ?? 0,
+                );
+              },
             ),
-            const SizedBox(height: 8.0),
+            SizedBox(height: 8.0),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 // ➊ 파이어스토어로부터 일정 정보 받아오기
@@ -69,13 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     .where(
                       'date',
                       isEqualTo:
-                          '${selectedDate.year}${selectedDate.month}${selectedDate.day}',
+                          '${selectedDate.year}$formattedMonth$formattedDay',
                     )
                     .snapshots(),
                 builder: (context, snapshot) {
                   // Stream을 가져오는 동안 에러가 났을 때 보여줄 화면
                   if (snapshot.hasError) {
-                    return const Center(
+                    return Center(
                       child: Text('일정 정보를 가져오지 못했습니다.'),
                     );
                   }
@@ -129,7 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onDaySelected(
-      DateTime selectedDate, DateTime focusedDate, BuildContext context) {
+    DateTime selectedDate,
+    DateTime focusedDate,
+    BuildContext context,
+  ) {
     setState(() {
       this.selectedDate = selectedDate;
     });
